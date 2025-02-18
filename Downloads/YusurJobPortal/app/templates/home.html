@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>💼 الوظائف المتاحة</h1>
+    {% if jobs %}
+        <div class="row">
+            {% for job in jobs %}
+                <div class="col-md-6">
+                    <div class="card my-3">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ job.title }}</h5>
+                            <p class="card-text">{{ job.description }}</p>
+                            <p class="card-text"><strong>🏢 الشركة:</strong> {{ job.company }}</p>
+
+                            <!-- زر تعديل وحذف يظهر فقط لصاحب الوظيفة -->
+                            {% if current_user.is_authenticated and job.employer_id == current_user.id %}
+                                <a href="{{ url_for('main.edit_job', job_id=job.id) }}" class="btn btn-warning">✏️ تعديل</a>
+                                <a href="{{ url_for('main.delete_job', job_id=job.id) }}" class="btn btn-danger" onclick="return confirm('⚠️ هل أنت متأكد أنك تريد حذف هذه الوظيفة؟');">🗑️ حذف</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>❌ لا توجد وظائف متاحة حاليًا.</p>
+    {% endif %}
+</div>
+{% endblock %}
